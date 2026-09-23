@@ -73,4 +73,10 @@ lib/
 ## Menambah proyek
 
 Tambah objek baru ke array `projects` di `lib/data.js` — otomatis
-muncul di daftar "Selected work".
+muncul di daftar "Selected work". Tiap proyek punya:
+
+- `stack` — array badge teknologi, mis. `["Next.js", "Tailwind"]`
+- `role` — peran/kontribusi kamu, mis. `"Solo developer"`
+- `date` — bulan + tahun, mis. `"Jan 2026"`
+- `demoHref` — link live demo (kosongkan `""` kalau tidak ada)
+- `codeHref` — link ke repo (kosongkan `""` kalau privat)

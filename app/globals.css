@@ -399,56 +399,105 @@ ul {
   border-bottom: 1px solid var(--line);
 }
 
-.work-link {
+.work-item {
   display: grid;
   grid-template-columns: 1fr auto;
-  align-items: baseline;
-  gap: 6px 24px;
+  align-items: start;
+  gap: 10px 24px;
   padding: 26px 4px;
-  transition: padding-left 0.25s ease, color 0.25s ease;
+  border-bottom: 1px solid var(--line);
+  transition: padding-left 0.25s ease;
 }
 
-.work-link:hover {
+.work-item:hover {
   padding-left: 12px;
-  color: var(--violet);
+}
+
+.work-info {
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
 }
 
 .work-title {
-  grid-column: 1;
   font-family: var(--font-display);
   font-size: clamp(1.15rem, 2.4vw, 1.5rem);
+  transition: color 0.25s ease;
 }
 
-.work-meta {
-  grid-column: 2;
-  display: flex;
-  gap: 18px;
-  color: var(--ink-dim);
-  font-size: 0.82rem;
-  white-space: nowrap;
+.work-item:hover .work-title {
+  color: var(--violet);
 }
 
 .work-desc {
-  grid-column: 1 / -1;
   color: var(--ink-dim);
   font-size: 0.95rem;
   max-width: 60ch;
 }
 
-.work-link:hover .work-desc,
-.work-link:hover .work-meta {
-  color: inherit;
-  opacity: 0.75;
+.work-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.work-badge {
+  font-size: 0.72rem;
+  padding: 3px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink-dim);
+}
+
+.work-meta {
+  display: flex;
+  gap: 16px;
+  color: var(--ink-dim);
+  font-size: 0.8rem;
+}
+
+.work-actions {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  white-space: nowrap;
+  padding-top: 4px;
+}
+
+.work-action {
+  font-size: 0.85rem;
+  color: var(--ink);
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.work-action:hover {
+  color: var(--cyan);
+  border-color: var(--cyan);
+}
+
+.work-action--ghost {
+  color: var(--ink-dim);
+}
+
+.work-action--ghost:hover {
+  color: var(--ink);
+  border-color: var(--ink-dim);
 }
 
 @media (max-width: 560px) {
-  .work-link {
+  .work-item {
     grid-template-columns: 1fr;
   }
 
-  .work-meta {
+  .work-actions {
     grid-column: 1;
-    white-space: normal;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
   }
 }
 
