@@ -1,0 +1,536 @@
+/* ------------------------------------------------------------------ */
+/* Fonts                                                               */
+/* ------------------------------------------------------------------ */
+/* Ganti dengan next/font kalau proyek pakai App Router (lihat README). */
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,340;9..144,440;9..144,600&family=Inter:wght@400;500&display=swap");
+
+/* ------------------------------------------------------------------ */
+/* Tokens                                                              */
+/* ------------------------------------------------------------------ */
+:root {
+  --bg: #060407;
+  --bg-soft: #0c0810;
+  --ink: #f3f0f5;
+  --ink-dim: #a79fb0;
+  --line: #24202b;
+  --violet: #a561ff;
+  --cyan: #6fe3ff;
+
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --edge: clamp(20px, 6vw, 64px);
+  --section-y: clamp(72px, 12vw, 140px);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Black hole background                                               */
+/* ------------------------------------------------------------------ */
+
+.bh {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: #141414;
+  transition: opacity 0.2s linear;
+  will-change: opacity;
+}
+
+.bh-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  will-change: transform;
+}
+
+/* Masker gelap — persis a-hole:before di file asli (ellipse 150%x140%, transparan di tengah). */
+.bh-vignette {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150%;
+  height: 140%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse at 50% 55%, transparent 10%, #141414 50%);
+  pointer-events: none;
+}
+
+/* Semburat ungu — persis a-hole:after (radial + blend overlay, bukan plus-lighter). */
+.bh-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 75%, #a900ff 20%, transparent 75%);
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* Pilar cahaya cyan→pink→kuning di tengah corong — persis a-hole .aura. */
+.bh-aura {
+  position: absolute;
+  top: -71.5%;
+  left: 50%;
+  width: 30%;
+  height: 140%;
+  transform: translateX(-50%);
+  border-radius: 0 0 100% 100%;
+  filter: blur(50px);
+  opacity: 0.75;
+  background: linear-gradient(
+      20deg,
+      #00f8f1,
+      #ffbd1e20 16.5%,
+      #fe848f 33%,
+      #fe848f20 49.5%,
+      #00f8f1 66%,
+      #00f8f160 85.5%,
+      #ffbd1e 100%
+    )
+    0 100% / 100% 200%;
+  mix-blend-mode: plus-lighter;
+  animation: aura-glow 5s linear infinite;
+  pointer-events: none;
+  will-change: transform, background-position;
+}
+
+@keyframes aura-glow {
+  0% {
+    background-position: 0 100%;
+  }
+  100% {
+    background-position: 0 300%;
+  }
+}
+
+/* Navbar butuh sedikit kontras tambahan yang tak ada di file asli (di sana tak ada navbar). */
+.nav {
+  background: linear-gradient(180deg, rgba(6, 4, 7, 0.55) 0%, transparent 100%);
+}
+
+.bh-scan {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.025) 0px,
+    rgba(255, 255, 255, 0.025) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bh-aura {
+    animation: none;
+  }
+}
+
+@media (pointer: coarse) {
+  .bh-canvas,
+  .bh-glow {
+    transition: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Layout shell                                                        */
+/* ------------------------------------------------------------------ */
+
+.page {
+  position: relative;
+  z-index: 1;
+}
+
+/* ------------------------------------------------------------------ */
+/* Navbar                                                               */
+/* ------------------------------------------------------------------ */
+
+.nav {
+  position: fixed;
+  top: 0;
+  inset-inline: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px var(--edge);
+  transition: background 0.3s ease, border-color 0.3s ease;
+  border-bottom: 1px solid transparent;
+}
+
+.nav--scrolled {
+  background: rgba(6, 4, 7, 0.7);
+  backdrop-filter: blur(10px);
+  border-bottom-color: var(--line);
+}
+
+.nav-brand {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  letter-spacing: 0.01em;
+}
+
+.nav-links {
+  display: flex;
+  gap: 28px;
+}
+
+.nav-links a {
+  font-size: 0.92rem;
+  color: var(--ink-dim);
+  transition: color 0.2s ease;
+}
+
+.nav-links a:hover {
+  color: var(--ink);
+}
+
+.nav-cta {
+  padding: 8px 18px;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 640px) {
+  .nav-links {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Buttons                                                              */
+/* ------------------------------------------------------------------ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 13px 26px;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-family: var(--font-body);
+  font-weight: 500;
+  transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+}
+
+.btn--solid {
+  background: var(--ink);
+  color: #0a0710;
+}
+
+.btn--solid:hover {
+  transform: translateY(-1px);
+}
+
+.btn--ghost {
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: var(--ink);
+  backdrop-filter: blur(2px);
+}
+
+.btn--ghost:hover {
+  border-color: var(--cyan);
+}
+
+/* ------------------------------------------------------------------ */
+/* Hero                                                                 */
+/* ------------------------------------------------------------------ */
+
+.hero {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 120px var(--edge) 80px;
+}
+
+.hero-inner {
+  max-width: 780px;
+}
+
+.hero-title {
+  margin: 0 0 22px;
+  font-family: var(--font-display);
+  font-weight: 440;
+  font-size: clamp(2.4rem, 6.4vw, 4.6rem);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.55);
+}
+
+.hero-title .line {
+  display: block;
+  overflow: hidden;
+}
+
+.hero-title .line span {
+  display: block;
+  animation: line-in 0.9s cubic-bezier(0.19, 1, 0.22, 1) backwards;
+  animation-delay: calc(var(--i) * 0.09s + 0.1s);
+}
+
+@keyframes line-in {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.hero-sub {
+  margin: 0 auto 36px;
+  max-width: 46ch;
+  color: var(--ink-dim);
+  font-size: clamp(1rem, 1.6vw, 1.1rem);
+  line-height: 1.6;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
+}
+
+.hero-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-title .line span {
+    animation: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Sections (shared)                                                    */
+/* ------------------------------------------------------------------ */
+
+.section {
+  max-width: 920px;
+  margin-inline: auto;
+  margin-top: var(--section-y);
+  padding-inline: var(--edge);
+}
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.section-head h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 440;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+}
+
+.section-count {
+  color: var(--ink-dim);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.9rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* Work list                                                            */
+/* ------------------------------------------------------------------ */
+
+.work-item {
+  border-bottom: 1px solid var(--line);
+}
+
+.work-link {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: 6px 24px;
+  padding: 26px 4px;
+  transition: padding-left 0.25s ease, color 0.25s ease;
+}
+
+.work-link:hover {
+  padding-left: 12px;
+  color: var(--violet);
+}
+
+.work-title {
+  grid-column: 1;
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2.4vw, 1.5rem);
+}
+
+.work-meta {
+  grid-column: 2;
+  display: flex;
+  gap: 18px;
+  color: var(--ink-dim);
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+.work-desc {
+  grid-column: 1 / -1;
+  color: var(--ink-dim);
+  font-size: 0.95rem;
+  max-width: 60ch;
+}
+
+.work-link:hover .work-desc,
+.work-link:hover .work-meta {
+  color: inherit;
+  opacity: 0.75;
+}
+
+@media (max-width: 560px) {
+  .work-link {
+    grid-template-columns: 1fr;
+  }
+
+  .work-meta {
+    grid-column: 1;
+    white-space: normal;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* About                                                                */
+/* ------------------------------------------------------------------ */
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 48px;
+}
+
+.about-lead {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2.6vw, 1.6rem);
+  line-height: 1.45;
+  margin: 0;
+}
+
+.about-facts {
+  display: grid;
+  gap: 18px;
+  align-content: start;
+  margin: 0;
+}
+
+.about-fact {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.92rem;
+}
+
+.about-fact dt {
+  color: var(--ink-dim);
+}
+
+.about-fact dd {
+  margin: 0;
+  text-align: right;
+}
+
+@media (max-width: 720px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Contact / footer                                                     */
+/* ------------------------------------------------------------------ */
+
+.section--contact {
+  text-align: center;
+  padding-bottom: 60px;
+  margin-top: var(--section-y);
+}
+
+.contact-line {
+  color: var(--ink-dim);
+  max-width: 42ch;
+  margin: 0 auto 18px;
+}
+
+.contact-email {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 5vw, 2.6rem);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 6px;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.contact-email:hover {
+  color: var(--cyan);
+  border-color: var(--cyan);
+}
+
+.footer {
+  margin-top: 72px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  color: var(--ink-dim);
+  font-size: 0.82rem;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 18px;
+}
+
+.footer-socials a:hover {
+  color: var(--ink);
+}
