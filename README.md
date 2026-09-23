@@ -74,4 +74,3 @@ lib/
 
 Tambah objek baru ke array `projects` di `lib/data.js` — otomatis
 muncul di daftar "Selected work".
-# Portofolio-blackhole
