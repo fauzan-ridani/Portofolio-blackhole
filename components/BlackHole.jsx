@@ -32,6 +32,7 @@ export default function BlackHole() {
       <div ref={auraRef} className="bh-aura" />
       <div ref={glowRef} className="bh-glow" />
       <div className="bh-scan" />
+      <div className="bh-edge-fade" />
     </div>
   );
 }

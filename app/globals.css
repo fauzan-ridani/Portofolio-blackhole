@@ -161,6 +161,22 @@ ul {
   pointer-events: none;
 }
 
+/* Pudarkan sisi kiri/kanan ke warna latar, supaya di layar sempit (mobile)
+   pola garis/cincin tidak terpotong tegas di tepi — menyatu seperti di
+   layar lebar, bukan terkesan "ditempel". */
+.bh-edge-fade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    #141414 0%,
+    transparent 18%,
+    transparent 82%,
+    #141414 100%
+  );
+  pointer-events: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .bh-aura {
     animation: none;
